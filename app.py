@@ -11,6 +11,10 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from io import BytesIO
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure the page
 st.set_page_config(
@@ -150,7 +154,13 @@ This report was generated using the Data Analysis & Reporting Tool
 # Function to generate report using OpenRouter API
 def generate_report(data):
     try:
-        openai.api_key = "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"
+        # Get API key from environment variable
+        api_key = os.getenv('OPENROUTER_API_KEY')
+        if not api_key:
+            st.error("OpenRouter API key not found. Please set the OPENROUTER_API_KEY environment variable.")
+            return None
+
+        openai.api_key = api_key
         openai.api_base = "https://openrouter.ai/api/v1"
 
         # Get column names and data types
